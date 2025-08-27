@@ -1,0 +1,155 @@
+<div class="profile-container">
+    <div class="profile-left">
+        <img [src]="profile?.photoUrl || 'assets/images/default-avatar.png'" (error)="onImageError($event)"
+            alt="Profile" />
+    </div>
+
+    <div class="profile-right">
+        <div class="profile-field">
+            <strong>Name:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.name }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].name" />
+        </div>
+
+        <div class="profile-field">
+            <strong>Designation:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.designation }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].designation" />
+        </div>
+        <div class="profile-field">
+            <strong>Employee Id:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.employeeID }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].employeeID" />
+        </div>
+        <div class="profile-field">
+            <strong>Location:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.location }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].location" />
+        </div>
+        <div class="profile-field">
+            <strong>Email:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.personalEmail }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].personalEmail" />
+        </div>
+        <div class="profile-field">
+            <strong>Phone:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.mobilePhone }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].mobilePhone" />
+        </div>
+        <div class="profile-field">
+            <strong>Supervisor:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.supervisor }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].supervisor" />
+        </div>
+        <div class="profile-field">
+            <strong>Marital Status:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.maritalStatus }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].maritalStatus" />
+        </div>
+        <div class="profile-field">
+            <strong>Blood Group:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.bloodGroup }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].bloodGroup" />
+        </div>
+        <div class="profile-field">
+            <strong>Date Of Join:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.dateOfJoin }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].dateOfJoin" />
+        </div>
+        <div class="profile-field">
+            <strong>Gender:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.gender }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].gender" />
+        </div>
+        <div class="profile-field">
+            <strong>Department:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.department }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].department" />
+        </div>
+        <div class="profile-field">
+            <strong>Competency:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.departmentHead }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].departmentHead" />
+        </div>
+        <div class="profile-field">
+            <strong>Emp. Status:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.empStatus }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].empStatus" />
+        </div>
+        <div class="profile-field">
+            <strong>Bank Name:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.bankName }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].bankName" />
+        </div>
+        <div class="profile-field">
+            <strong>Work Email:</strong>
+            <span *ngIf="!isEditing">{{ profile[0]?.workEmail }}</span>
+            <input *ngIf="isEditing" [(ngModel)]="profile[0].workEmail" />
+        </div>
+    </div>
+</div>
+
+<div class="edit-btn">
+    <button (click)="toggleEdit()">
+        {{ isEditing ? 'Save' : 'Edit' }}
+    </button>
+</div>
+
+<div class="sections">
+    <div class="section"
+        *ngFor="let section of ['Address Information','Emergency Contact','Education','Family Details','ESI Number / Mediclaim Details']">
+
+        <div class="section-header" (click)="toggleSection(section)">
+            {{ section }}
+            <span>{{ expanded[section] ? '-' : '+' }}</span>
+        </div>
+
+        <div class="section-content" *ngIf="expanded[section]">
+
+            <!-- Address Section: special layout -->
+            <div *ngIf="section === 'Address Information'">
+                <table class="data-table" *ngIf="data[section]?.length">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let addr of data[section]">
+                                {{ addr.addressType }} Address
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td *ngFor="let addr of data[section]">
+                                <p>{{ addr.line1 }}</p>
+                                <p>{{ addr.line2 }}</p>
+                                <p>{{ addr.city }}, {{ addr.state }}</p>
+                                <p>{{ addr.pincode }}</p>
+                                <p>{{ addr.country }}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- All other sections handled dynamically -->
+            <div *ngIf="section !== 'Address Information'">
+                <table class="data-table" *ngIf="data[section]?.length">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let key of getKeys(data[section][0])">
+                                {{ key | titlecase }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of data[section]">
+                            <td *ngFor="let key of getKeys(row)">
+                                {{ row[key] }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
